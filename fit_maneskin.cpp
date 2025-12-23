@@ -7,6 +7,7 @@
 #include "TMath.h"
 #include "TText.h"
 #include "TPaveText.h"
+#include "TArray.h"
 void fit_maneskin()
 {
     gStyle->SetCanvasPreferGL();
@@ -186,21 +187,73 @@ void fit_maneskin()
     fit_IV_50uA->Draw("SAME");
 
     TLegend *legend_IV{new TLegend(0.1, 0.9, 0.9, 0.785)};
-    legend_IV->SetNColumns(4);
-    legend_IV->AddEntry(graph_IV_100uA, "Punti \\; IV \\; (I_{B}=-0.10\\,mA)", "ep");
-    legend_IV->AddEntry(fit_IV_100uA, "Fit \\; IV \\; attiva \\; (I_{B}=-0.10\\,mA)", "l");
+    legend_IV->SetNColumns(5);
+    legend_IV->AddEntry((TObject*)0, "I_{B} = -0.10mA:\\quad", "");
+    legend_IV->AddEntry(graph_IV_100uA, "Punti \\; IV", "ep");
+    legend_IV->AddEntry(fit_IV_100uA, "Fit \\; IV \\; attiva", "l");
     legend_IV->AddEntry((TObject *)0, (std::string(fit_IV_100uA->GetParName(0)) + " = (" + std::to_string(fit_IV_100uA->GetParameter(0)) + " \\pm " + std::to_string(fit_IV_100uA->GetParError(0)) + ") mA").c_str(), "");
     legend_IV->AddEntry((TObject *)0, (std::string(fit_IV_100uA->GetParName(1)) + " = (" + std::to_string(fit_IV_100uA->GetParameter(1)) + " \\pm " + std::to_string(fit_IV_100uA->GetParError(1)) + ") (k \\Omega)^{-1}").c_str(), "");
 
-    legend_IV->AddEntry(graph_IV_50uA, "Punti \\; IV \\; (I_{B}=-0.05\\,mA)", "ep");
-    legend_IV->AddEntry(fit_IV_50uA, "Fit \\; IV \\; attiva \\; (I_{B}=-0.05\\,mA)", "l");
+    legend_IV->AddEntry((TObject*)0, "I_{B} = -0.05mA:\\quad", "");
+    legend_IV->AddEntry(graph_IV_50uA, "Punti \\; IV", "ep");
+    legend_IV->AddEntry(fit_IV_50uA, "Fit \\; IV \\; attiva", "l");
     legend_IV->AddEntry((TObject *)0, (std::string(fit_IV_50uA->GetParName(0)) + " = (" + std::to_string(fit_IV_50uA->GetParameter(0)) + " \\pm " + std::to_string(fit_IV_50uA->GetParError(0)) + ") mA").c_str(), "");
     legend_IV->AddEntry((TObject *)0, (std::string(fit_IV_50uA->GetParName(1)) + " = (" + std::to_string(fit_IV_50uA->GetParameter(1)) + " \\pm " + std::to_string(fit_IV_50uA->GetParError(1)) + ") (k \\Omega)^{-1}").c_str(), "");
 
     legend_IV->Draw();
 
+    int end_index_beta = 0;
+    for (int i = 0; i !=N_POINTS_100uA; ++i)
+    {
+        if(V_100uA[i]<1.1)
+        {
+            end_index_beta = i;
+            break;
+        }
+    }
 
-//     //per fare il titolo grande
+    Int_t N_beta = end_index_beta-1; //N_BETA = 9
+    Double_t beta      [9];
+    Double_t err_beta  [9];
+    Double_t V_beta    [9];
+    Double_t err_V_beta[9];
+
+
+    Double_t I_B_100 = 0.1;
+    Double_t err_I_B_100 = 0.03;
+    Double_t I_B_50 = 0.05;
+    Double_t err_I_B_50 = 0.03;
+
+    
+    Double_t err_I_B_combinato = (1/(I_B_100 - I_B_50)) * (1/(I_B_100 - I_B_50)) * (err_I_B_100*err_I_B_100 + err_I_B_50*err_I_B_50);
+    for (int i = 0;  i != end_index_beta; ++i)
+    {
+        beta[i] = (I_100uA[i] - I_50uA[i])/(I_B_100-I_B_50);
+        Double_t err_I_C_combinato = (1/(I_100uA[i] - I_50uA[i])) * (1/(I_100uA[i] - I_50uA[i])) * (I_Err_100uA[i]*I_Err_100uA[i] + I_Err_50uA[i]*I_Err_50uA[i]);
+        err_beta [i] = beta[i]*std::sqrt(err_I_C_combinato + err_I_B_combinato);
+        V_beta[i] = V_100uA[i];
+        err_V_beta[i] = V_Err_100uA[i];
+    }
+    
+    TGraphErrors* graph_beta = new TGraphErrors(end_index_beta, V_beta, beta, err_V_beta, err_beta);
+    TCanvas* canvas_beta = new TCanvas("canvas_beta", "canvas_beta", 0,0,800,600);
+    graph_beta->Draw("APE");    
+
+    Double_t beta_average = 0.;
+    Double_t err_beta_average = 0.;
+
+    Double_t weights_sum = 0.;
+    for (int i = 0; i != end_index_beta; ++i)
+    {
+        Double_t weight = 1/(err_beta[i] * err_beta[i]);
+        beta_average += weight * beta[i];
+        weights_sum += weight;
+    }
+    beta_average /= weights_sum;
+    err_beta_average = 1/std::sqrt(weights_sum);
+    std::cout<<"\nBeta = " <<beta_average <<" +- "<<err_beta_average<<"\n\n";
+    
+    //     //per fare il titolo grande
 //     TPaveText *pt = new TPaveText(0.2580645, 0.9244444, 0.7419355, 0.9925926, "blNDC");
 //     pt->SetName("title");
 //     pt->SetBorderSize(0);
