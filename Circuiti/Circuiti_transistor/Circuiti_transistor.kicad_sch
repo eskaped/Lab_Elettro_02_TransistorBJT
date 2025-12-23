@@ -1,0 +1,31 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 70887e0d-bab1-41aa-8594-5ee2c172a994)
+
+  (paper "A4")
+
+  (lib_symbols
+  )
+
+
+  (sheet (at 24.13 285.75) (size 12.7 3.81) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid a7cc6a34-745c-4a7c-abd1-90c9d76b245f)
+    (property "Sheetname" "Circuito_settare_corrente" (at 24.13 285.0384 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "Circuito_settare_corrente.kicad_sch" (at 24.13 290.1446 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "Circuiti_transistor"
+        (path "/70887e0d-bab1-41aa-8594-5ee2c172a994" (page "2"))
+      )
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

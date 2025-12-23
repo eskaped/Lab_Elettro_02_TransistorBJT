@@ -1,0 +1,77 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[font=it, width=0.9\linewidth]{caption}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{svg}
+\usepackage{hyperref}
+\usepackage{longtable}
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Tab.}
+\newcommand{\equationname}{Eq.}
+\title{Misura della caratteristica di uscita di un BJT P-N-P
+in configurazione a emettitore comune}
+\author{Bellini Samuele, Caprara Francesco}
+\date{Dicembre 2025, turno 4, tavolo 11}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+\section{Introduzione}
+\section{Apparato sperimentale e svolgimento}
+Gli strumenti di misura che abbiamo utilizzato sono un oscilloscopio analogico GW~GOS-652G 50Mhz e un multimetro digitale FLUKE~175. 
+L'oscilloscopio ha una portata di 400~V, divisa in 12 sezioni definite dal valore scelto per i volt associati ad ognuna delle 8 divisioni dello schermo.
+I valori disponibili da associare alle divisioni sono:
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{4pt}  %column separation%
+    % \renewcommand{\arraystretch}{1.25} %row separation%
+    \begin{tabular}{c  c  c  c  c  c  c  c  c  c  c  c  c}
+        \textbf{Volts/Div} 0.001 & 0.002 & 0.005 & 0.01 & 0.02 & 0.05 & 0.1 & 0.2 & 0.5 & 1 & 2 & 5 \\
+    \end{tabular}
+\end{table}
+\noindent L'errore associato alle misure fatte con l'oscilloscopio è dato dalla formula
+\[\sigma = \sqrt{{\sigma_L} ^2 + {\sigma_Z}^2 + {\sigma_C}^2 } \]
+dove \(\sigma_L\) è l'errore sulla lettura, pari a \(\frac{1}{2} \frac{Volts/Div}{5}\), in quanto ogni divisione è composta da 5 tacchette e tutti i segnali misurati sono sufficientemente puliti da poter apprezzare la mezza tacchetta,
+\(\sigma_Z\) è l'errore sullo zero, cioè l'errore dovuto all'imprecisione nel posizionare la linea di 0~V, ed è
+pari alla \(\sigma_L\) associata agli 0.001~Volts/Div, in quanto abbiamo utilizzato 
+quella scala per posizionare lo zero, e \(\sigma_C\) è l'errore dichiarato dal costruttore, pari al 3\% della misura. 
+\\Il multimetro è stato utilizzato come amperometro per misurare correnti continue; in questa modalià
+ha una portata di 10~A. Nell'intervallo [-60, 0]mA, dove sono presenti tutte le nostre misure,
+l'errore da associare alla misura è dato da 
+\[\sigma = { 1.5\% \, \left| misura \right| + 0.03\,mA } \]
+dove \(misura\) è il valore letto dal multimetro in mA.
+Abbiamo inoltre utilizzato il generatore da banco TTi EB2025T per ottenere una tensione costante di -5~V. 
+
+
+Per misurare due curve caratteristiche del BJT a emettitore comune abbiamo inizialmente realizzato
+il circuito in \figurename~\ref{App_sper:circuiti} a sinistra, variando il potenziometro collegato alla 
+base fino ad ottenere una lettura di corrente passante per la base pari a \(-100\mu A\). Abbiamo poi
+sostituito l'amperometro con un filo, mantenendo il valore del potenziometro fissato, in modo da lasciare 
+invariata \(I_{B}\), e abbiamo realizzato il circuito in \figurename~\ref{App_sper:circuiti} a destra.
+In questa configurazione è possibile utilizzare il potenziometro collegato al collettore per modificare sia 
+\(I_{C}\) sia \(V_{CE}\); Misurando la prima con l'amperometro e la seconda con l'oscilloscopio abbiamo
+ottenuto 32 punti, nell'intervallo di tensioni [0.05, 4]V.
+Abbiamo poi ripetuto lo stesso procedimento fissando la corrente di base a \(50\mu A\), ottenendo un altro set
+da 32 punti I-V.\\
+Per le misure è stato necessario fissare prima la tensione, aspettare che la corrente misurata dall'amperometro 
+si stabilizzasse per qualche secondo e prendere come valore di corrente l'ultimo letto, in quanto durante i primi istanti
+dopo aver cambiato valore di tensione, in particolare per le tensioni più alte, la corrente saliva troppo velocemente 
+per poter definire bene quale fosse il valore corretto.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.9\linewidth]{Immagini/circuiti.png}
+    \caption{ \label{App_sper:circuiti}}
+\end{figure}
+
+\section{Risultati e discussione}
+\section{Conclusioni}
+\section{Appendice}
+\end{document}
